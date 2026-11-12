@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import sql from '@/lib/db';
 import { requireActionUser } from '@/lib/session';
 import { data, dinLista, EroareActiune, executa, intreg, logActivitate, text, type Rezultat } from '@/lib/actiuni';
-import { ROLURI, ROLURI_IN_PROIECT, STATUSURI_PROIECT, rolInProiectPotrivit } from '@/lib/roluri';
+import { numeRol, ROLURI, ROLURI_IN_PROIECT, STATUSURI_PROIECT, rolInProiectPotrivit } from '@/lib/roluri';
 
 const CHEI_ROL_PROIECT = Object.keys(ROLURI_IN_PROIECT);
 
@@ -29,7 +29,7 @@ function verificaRolPotrivit(rolInProiect: string, angajat: { nume: string; rol:
     if (!rolInProiectPotrivit(rolInProiect, angajat.rol)) {
         const def = ROLURI_IN_PROIECT[rolInProiect];
         throw new EroareActiune(
-            `${def.label} poate fi ocupat doar de: ${def.roluriPermise.join(' / ')}. ${angajat.nume} este ${angajat.rol}.`
+            `${def.label} poate fi ocupat doar de: ${def.roluriPermise.map(numeRol).join(' sau ')}. ${angajat.nume} este ${numeRol(angajat.rol)}.`
         );
     }
 }

@@ -303,7 +303,7 @@ export default function SchemaViewer({
                 <p className="text-[11px] text-[#EEEEEE]/50">
                     {svg
                         ? `${repereAfisate.length} repere detectate automat in desen (${dinBom} din BOM). Click pe un chenar pentru validare.`
-                        : 'Plansa raster (fisierul original nu este stocat in aplicatie): pozitiile reperelor sunt afisate din baza de date. Incarca exportul SVG din EPLAN pentru afisarea vectoriala.'}
+                        : 'Plansa raster (fisierul original nu este stocat in aplicatie): pozitiile reperelor sunt afisate din baza de date. Incarca exportul SVG sau PDF din EPLAN pentru afisarea vectoriala.'}
                 </p>
 
                 {repereAfisate.length > 0 && (

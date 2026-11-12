@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "9mb",
     },
   },
+  // MuPDF (WebAssembly) ruleaza direct din node_modules, nu este impachetat
+  serverExternalPackages: ["mupdf"],
   cacheComponents: true,
   partialPrefetching: true,
   // fisierele citite la pornire de instrumentation.ts (schema + fixtures)

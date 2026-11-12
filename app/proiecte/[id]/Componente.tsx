@@ -86,17 +86,18 @@ export function FinalizeazaForm({ proiectId }: { proiectId: number }) {
 
 export function IncarcaPlansaModal({ proiectId, urmatoareaPagina }: { proiectId: number; urmatoareaPagina: number }) {
     return (
-        <Modal titlu="Incarca plansa SVG din EPLAN" buton="+ Plansa SVG" clasaButon={btnPrimar}>
+        <Modal titlu="Incarca plansa din EPLAN (SVG sau PDF)" buton="+ Plansa SVG / PDF" clasaButon={btnPrimar}>
             {(inchide) => (
                 <ActionForm action={incarcaPlansa} reseteaza onSucces={inchide} mesajSus className="space-y-3">
                     <input type="hidden" name="proiect_id" value={proiectId} />
-                    <p className="text-[11px] text-[#EEEEEE]/60">
-                        In EPLAN: File &rarr; Export &rarr; SVG (o pagina per fisier). Etichetele echipamentelor (ex: -KM1) raman text in SVG si sunt detectate automat.
+                    <p className="text-xs text-[#EEEEEE]/65 leading-relaxed">
+                        In EPLAN: File &rarr; Export &rarr; <b className="text-[#EEEEEE]">SVG</b> sau <b className="text-[#EEEEEE]">PDF</b>. PDF-ul este transformat automat in SVG,
+                        iar fiecare pagina devine o plansa separata. Etichetele echipamentelor (ex: -KM1) raman text si sunt detectate automat.
                         Daca numarul paginii exista deja, plansa va fi inlocuita.
                     </p>
-                    <div className="grid grid-cols-[100px_1fr] gap-3">
+                    <div className="grid grid-cols-[110px_1fr] gap-3">
                         <div>
-                            <label className={labelCls}>Pagina</label>
+                            <label className={labelCls}>Prima pagina</label>
                             <input name="numar_pagina" type="number" min={1} required defaultValue={urmatoareaPagina} className={inputCls} />
                         </div>
                         <div>
@@ -105,23 +106,27 @@ export function IncarcaPlansaModal({ proiectId, urmatoareaPagina }: { proiectId:
                         </div>
                     </div>
                     <div>
-                        <label className={labelCls}>Fisier SVG (max 8 MB)</label>
+                        <label className={labelCls}>Fisier SVG sau PDF (max 8 MB)</label>
                         <input
                             name="fisier"
                             type="file"
-                            accept=".svg,image/svg+xml"
+                            accept=".svg,.pdf,image/svg+xml,application/pdf"
                             required
                             className="block w-full text-xs text-[#EEEEEE]/70 file:mr-3 file:px-3 file:py-2 file:rounded-lg file:border-0 file:bg-[#FFD369] file:text-[#222831] file:font-semibold file:cursor-pointer"
                         />
                     </div>
                     <p className="text-[11px] text-[#EEEEEE]/50">
-                        Exemplu:{' '}
+                        Exemple:{' '}
                         <a href="/demo/CMD-2026-004_pagina-01.svg" download className="text-[#FFD369] hover:underline">
-                            plansa demo EPLAN (SVG)
+                            plansa demo (SVG)
+                        </a>
+                        {' · '}
+                        <a href="/demo/plansa_exemplu.pdf" download className="text-[#FFD369] hover:underline">
+                            plansa demo (PDF)
                         </a>
                     </p>
                     <div className="flex justify-end">
-                        <SubmitButton textAsteptare="Se incarca...">Incarca plansa</SubmitButton>
+                        <SubmitButton textAsteptare="Se incarca si se converteste...">Incarca plansa</SubmitButton>
                     </div>
                 </ActionForm>
             )}

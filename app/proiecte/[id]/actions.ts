@@ -5,6 +5,7 @@ import { cerePermisiuneProiect } from '@/lib/session';
 import { dinLista, EroareActiune, executa, intreg, logActivitate, text, type Rezultat } from '@/lib/actiuni';
 import { STATUSURI_PROIECT, STATUSURI_TEST, LABEL_STATUS } from '@/lib/roluri';
 import { curataSvgServer, MARIME_MAXIMA_SVG } from '@/lib/svg';
+import { pdfInSvg } from '@/lib/pdf';
 import type { RandBom } from '@/lib/csv';
 
 async function proiectulComponentei(componentaId: number) {
@@ -200,28 +201,54 @@ export async function incarcaPlansa(_: Rezultat, fd: FormData): Promise<Rezultat
         const titlu = text(fd, 'titlu_pagina', { max: 200 });
 
         const fisier = fd.get('fisier');
-        if (!(fisier instanceof File) || fisier.size === 0) throw new EroareActiune('Alege fisierul SVG exportat din EPLAN.');
+        if (!(fisier instanceof File) || fisier.size === 0) throw new EroareActiune('Alege un fisier SVG sau PDF exportat din EPLAN.');
         if (fisier.size > MARIME_MAXIMA_SVG) throw new EroareActiune('Fisierul depaseste 8 MB.');
-        if (!/\.svg$/i.test(fisier.name) && fisier.type !== 'image/svg+xml') throw new EroareActiune('Sunt acceptate doar fisiere .svg.');
 
-        let svg: string;
-        try {
-            svg = curataSvgServer(await fisier.text());
-        } catch {
-            throw new EroareActiune('Fisierul nu este un SVG valid.');
+        const estePdf = /\.pdf$/i.test(fisier.name) || fisier.type === 'application/pdf';
+        const esteSvg = /\.svg$/i.test(fisier.name) || fisier.type === 'image/svg+xml';
+        if (!estePdf && !esteSvg) throw new EroareActiune('Sunt acceptate doar fisiere .svg sau .pdf.');
+
+        // lista de pagini SVG de salvat (un SVG = o pagina, un PDF = toate paginile lui)
+        let pagini: string[];
+        let paginiCuText = 0;
+        if (estePdf) {
+            const rez = await pdfInSvg(new Uint8Array(await fisier.arrayBuffer()));
+            pagini = rez.pagini.map((p) => curataSvgServer(p));
+            paginiCuText = rez.paginiCuText;
+        } else {
+            try {
+                pagini = [curataSvgServer(await fisier.text())];
+            } catch {
+                throw new EroareActiune('Fisierul nu este un SVG valid.');
+            }
         }
+        if (numarPagina + pagini.length - 1 > 9999) throw new EroareActiune('Numarul paginii este prea mare.');
         const numeFisier = fisier.name.replace(/[^\w.\- ]/g, '_').slice(0, 200);
 
-        await sql`
-            INSERT INTO planse_schema (proiect_id, numar_pagina, titlu_pagina, cale_fisier, continut_svg)
-            VALUES (${proiectId}, ${numarPagina}, ${titlu}, ${numeFisier}, ${svg})
-            ON CONFLICT (proiect_id, numar_pagina) DO UPDATE SET
-                titlu_pagina = EXCLUDED.titlu_pagina,
-                cale_fisier  = EXCLUDED.cale_fisier,
-                continut_svg = EXCLUDED.continut_svg
-        `;
-        await logActivitate(user.id, proiectId, 'PLANSA_INCARCATA', `Pagina ${numarPagina}: ${titlu}`);
-        return `Plansa ${numarPagina} a fost incarcata. Reperele sunt detectate automat in desen.`;
+        for (let i = 0; i < pagini.length; i++) {
+            const numar = numarPagina + i;
+            const titluPagina = pagini.length > 1 ? `${titlu} - pagina ${i + 1}`.slice(0, 200) : titlu;
+            await sql`
+                INSERT INTO planse_schema (proiect_id, numar_pagina, titlu_pagina, cale_fisier, continut_svg)
+                VALUES (${proiectId}, ${numar}, ${titluPagina}, ${numeFisier}, ${pagini[i]})
+                ON CONFLICT (proiect_id, numar_pagina) DO UPDATE SET
+                    titlu_pagina = EXCLUDED.titlu_pagina,
+                    cale_fisier  = EXCLUDED.cale_fisier,
+                    continut_svg = EXCLUDED.continut_svg
+            `;
+        }
+        await logActivitate(
+            user.id,
+            proiectId,
+            'PLANSA_INCARCATA',
+            pagini.length > 1 ? `Paginile ${numarPagina}-${numarPagina + pagini.length - 1}: ${titlu}` : `Pagina ${numarPagina}: ${titlu}`
+        );
+
+        if (estePdf && paginiCuText === 0) {
+            return 'PDF convertit in SVG, dar nu contine text (pare scanat). Reperele nu pot fi detectate automat; exporta PDF-ul direct din EPLAN.';
+        }
+        if (pagini.length > 1) return `PDF convertit: ${pagini.length} pagini salvate (${numarPagina}-${numarPagina + pagini.length - 1}).`;
+        return estePdf ? `PDF convertit in SVG si salvat ca pagina ${numarPagina}.` : `Pagina ${numarPagina} a fost incarcata.`;
     });
 }
 

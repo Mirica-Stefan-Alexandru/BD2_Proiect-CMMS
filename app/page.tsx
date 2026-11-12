@@ -24,6 +24,13 @@ interface ProiectDashboard {
   echipa: { nume: string; rol: string }[] | null;
 }
 
+function salut(): string {
+  const ora = Number(new Date().toLocaleString('ro-RO', { hour: 'numeric', hour12: false, timeZone: 'Europe/Bucharest' }));
+  if (ora < 11) return 'Buna dimineata';
+  if (ora < 18) return 'Buna ziua';
+  return 'Buna seara';
+}
+
 export default async function DashboardPage({ searchParams }: PageProps<'/'>) {
   const user = await requirePageUser();
   const esteManager = user.rol === 'MANAGER';
@@ -89,6 +96,24 @@ export default async function DashboardPage({ searchParams }: PageProps<'/'>) {
 
   return (
     <AppShell user={user}>
+      <section className="anim-fade-up flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+        <div>
+          <span className="inline-block text-[10px] font-mono uppercase tracking-[0.2em] text-[#FFD369] mb-2">
+            Panou central &middot; {new Date().toLocaleDateString('ro-RO', { weekday: 'long', day: 'numeric', month: 'long' })}
+          </span>
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+            {salut()}, {user.nume.split(' ')[0]}
+          </h1>
+          <p className="text-sm text-[#EEEEEE]/65 mt-1">
+            {statistici.total - statistici.finalizate === 0
+              ? 'Nu ai niciun proiect activ momentan.'
+              : statistici.intarziate > 0
+                ? <>Ai <b className="text-[#EEEEEE]">{statistici.total - statistici.finalizate} proiecte active</b>; <b className="text-red-300">{statistici.intarziate} {statistici.intarziate === 1 ? 'a depasit' : 'au depasit'} termenul</b> si au nevoie de atentie.</>
+                : <>Ai <b className="text-[#EEEEEE]">{statistici.total - statistici.finalizate} proiecte active</b>, toate in termen.</>}
+          </p>
+        </div>
+      </section>
+
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           index={0}
@@ -243,8 +268,10 @@ export default async function DashboardPage({ searchParams }: PageProps<'/'>) {
                   </div>
 
                   <div>
-                    <h3 className="font-bold text-[#EEEEEE] text-lg group-hover:text-[#FFD369] transition-colors line-clamp-1" title={proiect.titlu}>
-                      {proiect.titlu}
+                    <h3 className="font-bold text-[#EEEEEE] text-lg leading-snug group-hover:text-[#FFD369] transition-colors line-clamp-2 min-h-[3.1rem]" title={proiect.titlu}>
+                      <Link href={`/proiecte/${proiect.id}`} className="after:absolute after:inset-0 after:rounded-2xl">
+                        {proiect.titlu}
+                      </Link>
                     </h3>
                     <p className="text-xs text-[#EEEEEE]/60 mt-1">{cfg.etapa}</p>
                   </div>
@@ -292,7 +319,7 @@ export default async function DashboardPage({ searchParams }: PageProps<'/'>) {
                 </div>
 
                 <div className="pt-5 mt-5 border-t border-[#EEEEEE]/10 flex items-center justify-between gap-3">
-                  <div className="flex items-center -space-x-2" aria-label="Echipa proiectului">
+                  <div className="relative z-10 flex items-center -space-x-1.5" aria-label="Echipa proiectului">
                     {echipa.slice(0, 4).map((m) => (
                       <div key={m.nume} className="ring-2 ring-[#393E46] rounded-full">
                         <Avatar nume={m.nume} marime="sm" />
@@ -305,7 +332,7 @@ export default async function DashboardPage({ searchParams }: PageProps<'/'>) {
                       <span className="text-[11px] font-mono text-amber-300/80">Fara echipa</span>
                     )}
                   </div>
-                  <Link href={`/proiecte/${proiect.id}`} prefetch={true} className={btnPrimar}>
+                  <Link href={`/proiecte/${proiect.id}`} prefetch={true} className={`${btnPrimar} relative z-10`}>
                     <span>Deschide Proiect</span>
                     <span className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
                   </Link>

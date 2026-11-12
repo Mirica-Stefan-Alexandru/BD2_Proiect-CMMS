@@ -49,6 +49,13 @@ export const ROLURI_IN_PROIECT: Record<
     },
 };
 
+const NUME_ROL: Record<string, string> = { MANAGER: 'manager', INGINER: 'inginer', OPERATOR: 'operator' };
+
+/** Numele rolului de sistem, pentru texte (ex: "inginer" in loc de "INGINER"). */
+export function numeRol(rol: string): string {
+    return NUME_ROL[rol] ?? rol.toLowerCase();
+}
+
 export function rolInProiectPotrivit(rolInProiect: string, rolSistem: string): boolean {
     const def = ROLURI_IN_PROIECT[rolInProiect];
     return !!def && def.roluriPermise.includes(rolSistem as Rol);

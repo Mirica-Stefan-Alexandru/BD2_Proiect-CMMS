@@ -186,7 +186,7 @@ export default async function ProiectPage({ params, searchParams }: PageProps<'/
                     titlu="Nicio plansa incarcata."
                     descriere={
                         acces.poateEdita
-                            ? 'Exporta pagina din EPLAN in format SVG si incarc-o cu butonul "+ Plansa SVG". Reperele vor fi detectate automat.'
+                            ? 'Exporta schema din EPLAN in format SVG sau PDF si incarc-o cu butonul "+ Plansa SVG / PDF". Reperele vor fi detectate automat.'
                             : 'Inginerul proiectului va incarca schemele exportate din EPLAN.'
                     }
                 />

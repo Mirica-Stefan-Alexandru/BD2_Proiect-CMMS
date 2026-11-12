@@ -119,6 +119,10 @@ sintetic (5.000 proiecte, 50.000 componente, 75.000 teste, 100.000 intrari jurna
   recunoscute automat (`Device tag`/`BMK`/`Cod reper`, `Description`/`Descriere`, `Manufacturer`, `Quantity`,
   `Comment`). Randurile cu acelasi reper sunt unite. Importul este o singura interogare `INSERT ... SELECT FROM unnest(...)`
   cu `ON CONFLICT DO UPDATE`, deci sute de piese se salveaza intr-un round-trip. Exemplu: `public/demo/EPLAN_parts-list_exemplu.csv`.
+- **Scheme (PDF)**: un PDF exportat din EPLAN poate fi incarcat direct. Serverul il transforma in SVG cu MuPDF
+  (WebAssembly, `lib/pdf.ts`), pagina cu pagina (maxim 40 de pagini, 8 MB), iar textul ramane text, deci reperele se
+  detecteaza la fel ca la un SVG nativ. Un PDF scanat (doar imagine) nu are text si nu poate fi analizat automat; aplicatia
+  te avertizeaza. Exemplu: `public/demo/plansa_exemplu.pdf`. MuPDF are licenta AGPL-3.0.
 - **Scheme (SVG)**: fisierul este igienizat (fara scripturi, handler-e de evenimente, `foreignObject`, link-uri externe)
   pe server si din nou in browser. Vizualizatorul cauta elementele `<text>` cu etichete de echipament (`-KM1`, `=A1+S1-QF2`)
   si deseneaza chenare colorate peste ele, fara calibrare manuala. La primul test semnat, pozitia reperului se salveaza

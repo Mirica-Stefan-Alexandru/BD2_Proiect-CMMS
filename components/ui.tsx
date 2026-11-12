@@ -4,14 +4,14 @@ import { getRoleBadge, getStatusConfig, getTestConfig, initiale } from '@/lib/ui
 import { LABEL_STATUS, LABEL_TEST } from '@/lib/roluri';
 
 export const inputCls =
-    'w-full bg-[#222831] border border-[#EEEEEE]/15 hover:border-[#EEEEEE]/30 focus:border-[#FFD369] rounded-xl px-3.5 py-2 text-xs text-[#EEEEEE] placeholder-[#EEEEEE]/40 focus:outline-none transition-colors disabled:opacity-50';
-export const labelCls = 'block text-[10px] font-mono uppercase tracking-wider text-[#EEEEEE]/60 mb-1.5 ml-0.5';
+    'w-full bg-[#222831] border border-[#EEEEEE]/15 hover:border-[#EEEEEE]/30 focus:border-[#FFD369] rounded-xl px-3.5 py-2 text-[13px] text-[#EEEEEE] placeholder-[#EEEEEE]/40 focus:outline-none transition-colors disabled:opacity-50';
+export const labelCls = 'block text-[11px] font-mono uppercase tracking-wider text-[#EEEEEE]/60 mb-1.5 ml-0.5';
 export const btnPrimar =
-    'inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#FFD369] hover:bg-[#ffdc85] active:scale-[0.98] text-[#222831] rounded-xl text-xs font-bold transition-all shadow-sm shadow-black/30 disabled:opacity-50 disabled:pointer-events-none cursor-pointer';
+    'inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-[#FFD369] hover:bg-[#ffdc85] active:scale-[0.98] text-[#222831] rounded-xl text-[13px] font-bold transition-all shadow-sm shadow-black/30 disabled:opacity-50 disabled:pointer-events-none cursor-pointer';
 export const btnSecundar =
-    'inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-[#222831] hover:bg-[#2b313a] text-[#EEEEEE]/80 hover:text-[#EEEEEE] rounded-xl text-xs font-semibold border border-[#EEEEEE]/15 hover:border-[#EEEEEE]/30 transition-all disabled:opacity-50 cursor-pointer';
+    'inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-[#222831] hover:bg-[#2b313a] text-[#EEEEEE]/80 hover:text-[#EEEEEE] rounded-xl text-[13px] font-semibold border border-[#EEEEEE]/15 hover:border-[#EEEEEE]/30 transition-all disabled:opacity-50 cursor-pointer';
 export const btnPericol =
-    'inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-300 rounded-xl text-xs font-semibold border border-red-500/30 hover:border-red-500/60 transition-all disabled:opacity-50 cursor-pointer';
+    'inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-300 rounded-xl text-[13px] font-semibold border border-red-500/30 hover:border-red-500/60 transition-all disabled:opacity-50 cursor-pointer';
 
 export function delay(index: number, pas = 45): CSSProperties {
     return { animationDelay: `${Math.min(index, 14) * pas}ms` };

@@ -230,9 +230,11 @@ export default async function EchipaPage({ searchParams }: PageProps<'/admin/ech
                                     )}
                                 </div>
 
-                                <div className="mt-auto pt-3 border-t border-[#EEEEEE]/10 flex items-center justify-between">
-                                    <span className="text-[10px] font-mono text-[#EEEEEE]/50">Ultima activitate: {formatRelativ(a.ultima_activitate)}</span>
-                                    <Link href={`/admin/echipa/${a.id}`} className="text-xs font-semibold text-[#FFD369] hover:underline">
+                                <div className="mt-auto pt-3 border-t border-[#EEEEEE]/10 flex items-center justify-between gap-3">
+                                    <span className="text-[10px] font-mono text-[#EEEEEE]/50 truncate" title={`Ultima activitate: ${formatRelativ(a.ultima_activitate)}`}>
+                                        {a.ultima_activitate ? `Activ ${formatRelativ(a.ultima_activitate)}` : 'Fara activitate inregistrata'}
+                                    </span>
+                                    <Link href={`/admin/echipa/${a.id}`} className="shrink-0 text-xs font-semibold text-[#FFD369] hover:underline">
                                         Detalii &rarr;
                                     </Link>
                                 </div>
