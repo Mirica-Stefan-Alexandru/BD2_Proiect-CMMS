@@ -1,8 +1,13 @@
 @import "tailwindcss";
 
+/* Paleta industriala CMMS
+   #222831 fundal | #393E46 suprafete | #FFD369 accent | #EEEEEE text */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #222831;
+  --foreground: #EEEEEE;
+  --surface: #393E46;
+  --accent: #FFD369;
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -12,15 +17,122 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scrollbar-gutter: stable;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+/* focus vizibil pentru navigare din tastatura (tablete cu tastatura, accesibilitate) */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 0.6rem;
+}
+
+/* scrollbar discret in tema */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #4b525c transparent;
+}
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-thumb { background: #4b525c; border-radius: 999px; border: 2px solid var(--background); }
+*::-webkit-scrollbar-thumb:hover { background: #5d6570; }
+
+/* inputuri native pe tema intunecata */
+input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.85); cursor: pointer; }
+select option { background: #222831; color: #EEEEEE; }
+
+/* ---------------------------------------------------------------------------
+   Animatii
+   --------------------------------------------------------------------------- */
+@keyframes cmms-fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes cmms-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes cmms-scale-in {
+  from { opacity: 0; transform: translateY(6px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes cmms-grow-x {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@keyframes cmms-shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+@keyframes cmms-slide-in-right {
+  from { opacity: 0; transform: translateX(16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes cmms-pulse-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(255, 211, 105, 0.45); }
+  100% { box-shadow: 0 0 0 10px rgba(255, 211, 105, 0); }
+}
+@keyframes cmms-marker {
+  0%, 100% { stroke-opacity: 1; }
+  50%      { stroke-opacity: 0.45; }
+}
+
+.anim-fade-up    { animation: cmms-fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.anim-fade-in    { animation: cmms-fade-in 0.35s ease-out both; }
+.anim-scale-in   { animation: cmms-scale-in 0.25s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.anim-slide-in   { animation: cmms-slide-in-right 0.3s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.anim-grow-x     { transform-origin: left center; animation: cmms-grow-x 0.9s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.anim-pulse-ring { animation: cmms-pulse-ring 1.6s ease-out infinite; }
+
+.skeleton {
+  background: linear-gradient(90deg, #393E46 0%, #444a53 50%, #393E46 100%);
+  background-size: 800px 100%;
+  animation: cmms-shimmer 1.4s linear infinite;
+}
+
+/* card cu lumina subtila la hover */
+.card-glow {
+  position: relative;
+  isolation: isolate;
+}
+.card-glow::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(600px circle at 50% 0%, rgba(255, 211, 105, 0.10), transparent 40%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.card-glow:hover::before { opacity: 1; }
+
+/* markerii din vizualizatorul SVG */
+.svg-marker { cursor: pointer; transition: fill 0.2s ease, stroke-width 0.2s ease; }
+.svg-marker:hover { stroke-width: 4; }
+.svg-marker[data-selectat="true"] { stroke-width: 4; animation: cmms-marker 1.2s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Rapoarte printabile (Salveaza ca PDF din browser)
+   --------------------------------------------------------------------------- */
+@media print {
+  @page { size: A4; margin: 14mm; }
+  html, body { background: #fff !important; color: #111 !important; }
+  .no-print { display: none !important; }
+  .print-page { box-shadow: none !important; border: none !important; }
 }

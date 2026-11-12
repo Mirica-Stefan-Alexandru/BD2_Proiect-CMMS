@@ -1,0 +1,11 @@
+Device tag;Description;Manufacturer;Quantity;Comment
+-QM1;Separator de sarcina principal 63A maner rotativ;ABB;1;Montaj pe usa
+-QF2;Intrerupator automat 2P 6A C-curve circuit comanda;Schneider Electric;1;
+-PS1;Sursa in comutatie 24VDC 10A SITOP PSU100S;Siemens;1;
+-PLC1;CPU Siemens S7-1200 1214C DC/DC/DC;Siemens;1;Program V2.3
+-U1;Convertizor de frecventa 5.5kW IP20;Danfoss;2;Rezistenta franare externa
+-K1..K8;Relee intermediare interfata cu soclu 24VDC;Finder;8;
+-XD1;Bloc cleme distributie 24VDC 2.5mm2;Phoenix Contact;20;
+-EV1;Ventilator cu filtru IP54 230VAC;Rittal;1;Termostat -BT1
+-BT1;Termostat mecanic NC 0-60C;Rittal;1;
+-HL1;Lampa semnalizare LED verde 24VDC;Schneider Electric;1;Usa tablou
